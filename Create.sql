@@ -1,11 +1,18 @@
-CREATE DATABASE tripbudgetplanner;
+-- CREATE DATABASE tripbudgetplanner;
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+-- CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE "locations" (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     city VARCHAR(150) NOT NULL,
     country VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE images (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    url TEXT NOT NULL,
+    object_type TEXT NOT NULL CHECK (object_type IN ('users', 'voyages')),
+    object_id INT NOT NULL
 );
 
 CREATE TABLE "users" (
@@ -17,17 +24,67 @@ CREATE TABLE "users" (
     mail VARCHAR(250) UNIQUE NOT NULL,
     phone_numb VARCHAR(20),
     birthday DATE,
-    location_id UUID REFERENCES "locations"(id) ON DELETE SET NULL
+    profile_image_id INT REFERENCES images(id) ON DELETE SET NULL,
+    location_id INT REFERENCES "locations"(id) ON DELETE SET NULL
 );
 
-CREATE TABLE "friends" (
-  id INT PRIMARY KEY REFERENCES "users"(id) ON DELETE CASCADE,
-  friends_ids INT[] NOT NULL DEFAULT '{}'
+CREATE TABLE friends (
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    friend_id INT REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, friend_id)
 );
+
+CREATE TABLE voyages (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    object_type TEXT NOT NULL CHECK (object_type IN ('users', 'travel_groups')),
+    object_id INT NOT NULL,
+    destination TEXT NOT NULL,
+    budget_total NUMERIC(10, 2) NOT NULL,
+    duration_days INT NOT NULL CHECK (duration_days > 0),
+    start_date DATE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    cover_image_id INT REFERENCES images(id) ON DELETE SET NULL
+);
+
 
 CREATE TABLE "travel_groups" (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  voyage_id INT REFERENCES voyages(id) ON DELETE SET NULL,
   name VARCHAR(100) NOT NULL,
-  member_ids INT[] NOT NULL DEFAULT '{}',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE group_memberships (
+    group_id INT REFERENCES travel_groups(id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    PRIMARY KEY (group_id, user_id)
+);
+
+CREATE TABLE expenses (
+  id                INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  voyage_id         INT NOT NULL REFERENCES voyages(id) ON DELETE CASCADE,
+  transport_amount  NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (transport_amount >= 0),
+  hotel_amount      NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (hotel_amount >= 0),
+  restaurant_amount NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (restaurant_amount >= 0),
+  activities_amount NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (activities_amount >= 0),
+  total_amount      NUMERIC(12,2)
+    GENERATED ALWAYS AS
+      (transport_amount + hotel_amount + restaurant_amount + activities_amount) STORED,
+
+  currency          CHAR(3) NOT NULL DEFAULT 'EUR',
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (voyage_id)
+);
+
+CREATE TABLE itinerary (
+  id           SERIAL PRIMARY KEY,
+  voyage_id    INT NOT NULL REFERENCES voyages(id) ON DELETE CASCADE,
+  day_number   INT NOT NULL CHECK (day_number > 0),
+  activity     TEXT NOT NULL,
+
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Empêche deux jours identiques pour le même voyage
+ALTER TABLE itinerary
+  ADD CONSTRAINT unique_voyage_day UNIQUE (voyage_id, day_number);
