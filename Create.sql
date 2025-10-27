@@ -1,6 +1,6 @@
--- CREATE DATABASE tripbudgetplanner;
+--CREATE DATABASE tripbudgetplanner;
 
--- CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+--CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE "locations" (
      id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

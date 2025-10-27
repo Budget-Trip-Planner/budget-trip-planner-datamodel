@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/Create.sql" value="82adb4fb-fd33-4166-b02f-d279455bc108" />
+    <file url="file://$PROJECT_DIR$/Del_Inserte.sql" value="82adb4fb-fd33-4166-b02f-d279455bc108" />
+    <file url="file://$PROJECT_DIR$/Drop.sql" value="82adb4fb-fd33-4166-b02f-d279455bc108" />
+    <file url="file://$PROJECT_DIR$/Fonction + Trigger.sql" value="82adb4fb-fd33-4166-b02f-d279455bc108" />
+    <file url="file://$PROJECT_DIR$/Insert.sql" value="82adb4fb-fd33-4166-b02f-d279455bc108" />
+    <file url="file://$PROJECT_DIR$/Test trigger.sql" value="82adb4fb-fd33-4166-b02f-d279455bc108" />
+  </component>
+</project>

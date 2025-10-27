@@ -1,12 +1,12 @@
 -- Ordonnancement ID friend
 
 -- On insère (3,1), le trigger doit inverser en (1,3)
-INSERT INTO friends (user_id, friend_id) VALUES (3, 1);
+INSERT INTO friends (user_id, friend_id) VALUES (30, 29);
 
 -- On vérifie :
-SELECT * FROM friends WHERE user_id = 1 AND friend_id = 3;
+SELECT * FROM friends WHERE user_id = 29 AND friend_id = 30;
 
-SELECT * FROM friends WHERE user_id = 3 AND friend_id = 1;
+SELECT * FROM friends WHERE user_id = 30 AND friend_id = 29;
 
 -- On supprime :
 DELETE FROM friends WHERE user_id = 1 AND friend_id = 3;
