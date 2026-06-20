@@ -1,11 +1,7 @@
 # Budget Trip Planner — Modèle de données
 
 Schéma de base de données du projet **Budget Trip Planner**, une application web de
-planification de voyage selon budget, préférences et contraintes. **PostgreSQL**.
-Projet de groupe — ESIEE Paris (E5, 2025/2026).
-
-> Vue d'ensemble du projet : https://github.com/Budget-Trip-Planner
-> Portfolio : https://afouanee.dev/projects/budget-trip-planner
+planification de voyage selon budget, préférences et contraintes. **PostgreSQL**. Projet académique — ESIEE Paris (E5, 2025/2026).
 
 ---
 
@@ -40,9 +36,3 @@ psql -h <hôte> -U <utilisateur> -d <base> -f <script>.sql
 ```
 
 Adapter le nom du script et les paramètres de connexion à votre environnement.
-
----
-
-## Équipe
-
-Projet de groupe — ESIEE Paris (E5, 2025/2026).
